@@ -1,4 +1,4 @@
-from flask import Flask, flash, render_template, redirect, url_for, request, session
+from flask import Flask, flash, render_template, redirect, url_for, request
 from module.database import Database
 from module.constants import Constants
 from pprint import pprint
@@ -10,6 +10,7 @@ import json
 app = Flask(__name__)
 db = Database()
 constants = Constants()
+session = requests.Session()
 
 
 @app.route('/')
@@ -52,6 +53,7 @@ def logout():
 def searchPeneliti():
     if request.method == 'GET':
         data = request.args.get('mauthors')
+
         data = scrapePenelitiUser(data)
         return render_template('frontend/home.html', data=data)
     else:
