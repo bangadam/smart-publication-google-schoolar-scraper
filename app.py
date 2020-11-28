@@ -1,4 +1,4 @@
-from flask import Flask, flash, render_template, redirect, url_for, request
+from flask import Flask, flash, render_template, redirect, url_for, request, session
 from module.database import Database
 from module.constants import Constants
 from pprint import pprint
@@ -10,7 +10,7 @@ import json
 app = Flask(__name__)
 db = Database()
 constants = Constants()
-session = requests.Session()
+request_session = requests.Session()
 
 
 @app.route('/')
@@ -62,7 +62,7 @@ def searchPeneliti():
 
 def scrapePenelitiUser(data):
     url = constants.SEARCH_PROFILE_API + data
-    res = session.get(url)
+    res = request_session.get(url)
     res = bs4.BeautifulSoup(res.content, 'html.parser')
     list_user = res.findAll('div', class_='gsc_1usr')
     data_user = []
@@ -88,7 +88,7 @@ def detail(url_bio):
     user_id = request.args.get('user')
     url = constants.DETAIL_USER_API + user_id
     pprint(url)
-    res = session.get(url)
+    res = request_session.get(url)
     res = bs4.BeautifulSoup(res.content, 'html.parser')
     data = {}
 
