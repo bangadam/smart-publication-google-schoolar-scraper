@@ -13,9 +13,16 @@ constants = Constants()
 request_session = requests.Session()
 
 
+@app.route('/home')
+def home():
+    if(session.get('loggedin') is None):
+        return redirect('/login')
+    else:
+        return render_template('frontend/home.html')
+
 @app.route('/')
 def index():
-    return render_template('frontend/home.html')
+    return render_template('frontend/index.html')
 
 @app.route('/lecturers')
 def lecturers():
@@ -34,10 +41,10 @@ def login():
             "password": password
         }
         result = db.loginCheck(data)
-
+        # pprint(result)
         if result != None:
             session['loggedin'] = True
-            return render_template('frontend/home.html')
+            return redirect('/home')
         else:
             msg = 'User ID / password salah'
             return render_template('frontend/auth/login.html', msg=msg)
@@ -46,7 +53,7 @@ def login():
 
 @app.route('/logout')
 def logout():
-    session.pop('loggedin', None)
+    session.clear()
     return redirect('/login')
 
 @app.route('/search-peneliti', methods=['GET'])
